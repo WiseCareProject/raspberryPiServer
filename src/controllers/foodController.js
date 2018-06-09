@@ -1,29 +1,60 @@
-const waterService = require('../service/waterService');
+const globals = require('../globals/globals');
+const foodService = require('../service/foodService');
 
-function getWaterLevel(req,res)
+
+function feedNow(socket)
 {
-    let level = req.query.level;
-    let ack = waterService.setWaterData(level);
-
-        if(ack=="OK")
-        {
-            res.send('waterUpdated').end();
-        }
-        else
-        {
-            res.send('waterNotUpdated').end();
-        }
-}
-
-function getFloatingStatus(req,res)
-{
-    let status = "";
-    console.log(req.query.float);
-    res.send("hey");
-}
-
-module.exports =
+    if(socket.connected)
     {
-    getWaterLevel,
-    getFloatingStatus
+        let currentPlate = globals.userSettings.defaultAmountOfFood;
+        foodService.feedNow().then((data => {
+            if (data)
+            {
+                return ({status: data});
+            }
+        })).catch((err) => {
+            return err;
+        });
+    }
+}
+function getPlateAmount(socket)
+{
+    return new Promise((resolove,reject)=>{
+        if(socket.connected)
+        {
+            foodService.getPlateAmount().then((data => {
+                if (data)
+                {
+                    resolove ({status: data});
+                }
+            })).catch((err) => {
+                reject (err);
+            });
+        }
+    });
+
+}
+
+function getTankAmount(socket)
+{
+    return new Promise((resolove,reject)=>{
+        if(socket.connected)
+        {
+            foodService.getTankAmount().then((data => {
+                if (data)
+                {
+                    resolove ({status: data});
+                }
+            })).catch((err) => {
+                reject (err);
+            });
+        }
+    });
+}
+
+
+module.exports = {
+        feedNow,
+        getTankAmount,
+        getPlateAmount
 };

@@ -1,12 +1,13 @@
 const globals = require('../globals/globals');
+const feedApi = require('../api/feedApi/feedApi');
 
-function setWaterData(level)
+function setPlateAmountData(plateAmount)
 {
-    if(level)
+    if(plateAmount)
     {
-        level = level.slice(0, -1);
-        globals.waterTankLevel = parseInt(level);
-        return 'OK';
+        plateAmount = plateAmount.slice(0, -1);
+        globals.foodPlateAmount = parseInt(plateAmount);
+        return 'plateAmountOK';
     }
     else
     {
@@ -14,6 +15,47 @@ function setWaterData(level)
     }
 }
 
+async function feedNow()
+{
+    try
+    {
+        let data = await feedApi.feed();
+        return data;
+    }
+    catch (err)
+    {
+        console.error(err);
+    }
+}
+
+async function getTankAmount()
+{
+    try
+    {
+        let data = await feedApi.getTankAmount();
+        return data;
+    }
+    catch (err)
+    {
+        console.error(err);
+    }
+}
+
+async function getPlateAmount()
+{
+    try
+    {
+        let data = await feedApi.getPlateAmount();
+        return data;
+    }
+    catch (err)
+    {
+        console.error(err);
+    }
+}
+
 module.exports = {
-    setWaterData
+    feedNow,
+    getTankAmount,
+    getPlateAmount
 };

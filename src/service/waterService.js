@@ -1,16 +1,49 @@
 const globals = require('../globals/globals');
+const waterApi = require('../api/waterApi/waterApi');
 
-function setWaterData(level){
-    if(level) {
-        level = level.slice(0, -1);
-        globals.waterTankLevel = parseInt(level);
-        return 'OK';
+async function getWaterData()
+{
+    try
+    {
+        let data = await waterApi.getWaterLevel();
+        return data;
+        console.log(data);
     }
-    else{
-        return 'NOT'
+    catch (err)
+    {
+        console.error(err);
+    }
+}
+
+async function getFloatingStatus()
+{
+    try
+    {
+        let data = await waterApi.getFloatingStatus();
+        return data;
+    }
+    catch (err)
+    {
+        console.error(err);
+    }
+}
+
+
+async function fillWaterTank()
+{
+    try
+    {
+        let data = await waterApi.fillWaterTank();
+        return data;
+    }
+    catch (err)
+    {
+        console.error(err);
     }
 }
 
 module.exports = {
-    setWaterData
+    getFloatingStatus,
+    getWaterData,
+    fillWaterTank
 };
