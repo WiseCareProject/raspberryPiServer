@@ -65,10 +65,21 @@ function turnOffHeat()
     });
 }
 
+function healthCheck(){
+    return new Promise((resolve,reject)=>{
+        axios.get(globals.listOfDevices.environment+'/healthCheck',{timeout:1000}).then(response=>{
+            resolve(response.data);
+        }).catch(err=>{
+            resolve("error");
+        })
+    });
+}
+
 module.exports = {
     turnOnCooling,
     turnOffCooling,
     getTemperature,
     turnOnHeat,
-    turnOffHeat
+    turnOffHeat,
+    healthCheck
 };

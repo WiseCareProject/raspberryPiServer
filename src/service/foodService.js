@@ -54,8 +54,22 @@ async function getPlateAmount()
     }
 }
 
+async function stopServo()
+{
+    try
+    {
+        let data = await feedApi.stopServo();
+        return data;
+    }
+    catch (err)
+    {
+        console.error(err);
+    }
+}
+
 module.exports = {
     feedNow,
     getTankAmount,
-    getPlateAmount
+    getPlateAmount,
+    stopServo
 };

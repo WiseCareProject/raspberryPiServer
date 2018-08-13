@@ -39,12 +39,22 @@ function fillWaterTank()
             reject(err);
         })
     });
+}
 
+function healthCheck(){
+    return new Promise((resolve,reject)=>{
 
+        axios.get(globals.listOfDevices.water+'/healthCheck',{timeout:1000}).then(response=>{
+            resolve(response.data);
+        }).catch(err=>{
+            resolve("error");
+        })
+    });
 }
 
 module.exports= {
     getWaterLevel,
     getFloatingStatus,
-    fillWaterTank
+    fillWaterTank,
+    healthCheck
 };

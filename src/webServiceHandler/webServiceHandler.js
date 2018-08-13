@@ -2,8 +2,13 @@ const webServiceEventsHandler = require('./webServiceEventsHandler');
 const foodController = require('../controllers/foodController');
 const waterController = require('../controllers/waterController');
 const environmentController = require('../controllers/environmentController');
+const registrationController = require('../controllers/registationController');
+const cameraController = require('../controllers/cameraController');
 const globals = require('../globals/globals');
 const ioreq = require('socket.io-request');
+const iostr = require('socket.io-stream');
+const stream = iostr.createStream();
+const fs = require('fs');
 
 module.exports = (socket)=> {
 
@@ -39,6 +44,12 @@ module.exports = (socket)=> {
 
     ioreq(socket).response('foodTankAmount',(req,res)=>{
         foodController.getTankAmount(socket).then(data=>{
+            res(data);
+        });
+    });
+
+    ioreq(socket).response('stopServo',(req,res)=>{
+        foodController.stopServo(socket).then(data=>{
             res(data);
         });
     });
@@ -99,5 +110,22 @@ module.exports = (socket)=> {
         });
     });
 
+    ioreq(socket).response('devicesStatus',(req,res)=>{
+        registrationController.checkDevicesStatus(socket).then(data=>{
+            res(data);
+        });
+    });
+
+    // ioreq(socket).response('getSnap',(req,res)=>{
+    //     cameraController.getSnapShot(socket).then(data=>{
+    //         res(data);
+    //     });
+    // });
+
+    iostr(socket).on('getSnap',function (stream){
+        cameraController.getSnapShot(socket).then(data=>{
+            return fs.createReadStream(`${__dirname}/../api/camera/images/snap.jpg`).pipe(stream);
+                });
+    });
 };
 

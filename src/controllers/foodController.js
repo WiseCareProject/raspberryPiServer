@@ -52,9 +52,27 @@ function getTankAmount(socket)
     });
 }
 
+function stopServo(socket)
+{
+    return new Promise((resolove,reject)=>{
+        if(socket.connected)
+        {
+            foodService.stopServo().then((data => {
+                if (data)
+                {
+                    resolove ({status: data});
+                }
+            })).catch((err) => {
+                reject (err);
+            });
+        }
+    });
+}
+
 
 module.exports = {
         feedNow,
         getTankAmount,
-        getPlateAmount
+        getPlateAmount,
+        stopServo
 };

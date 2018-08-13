@@ -19,7 +19,7 @@ function getTankAmount()
 {
     return new Promise((resolve,reject)=>{
 
-        axios.get(globals.listOfDevices.food+'/tankAmount').then(response=>{
+        axios.get(globals.listOfDevices.food+'/tankAmount',{timeout:7000}).then(response=>{
             resolve(response.data);
         }).catch(err=>{
             reject(err);
@@ -33,7 +33,7 @@ function getPlateAmount()
 {
     return new Promise((resolve,reject)=>{
 
-        axios.get(globals.listOfDevices.food+'/scale').then(response=>{
+        axios.get(globals.listOfDevices.food+'/scale',{timeout:4000}).then(response=>{
             resolve(response.data);
         }).catch(err=>{
             reject(err);
@@ -42,9 +42,32 @@ function getPlateAmount()
 
 
 }
+function healthCheck(){
+    return new Promise((resolve,reject)=>{
+
+        axios.get(globals.listOfDevices.food+'/healthCheck',{timeout:1000}).then(response=>{
+            resolve(response.data);
+        }).catch(err=>{
+            resolve("error");
+        })
+    });
+}
+
+function stopServo(){
+    return new Promise((resolve,reject)=>{
+
+        axios.get(globals.listOfDevices.food+'/stopServo').then(response=>{
+            resolve(response.data);
+        }).catch(err=>{
+            resolve("error");
+        })
+    });
+}
 
 module.exports= {
     feed,
     getTankAmount,
-    getPlateAmount
+    getPlateAmount,
+    healthCheck,
+    stopServo
 };
